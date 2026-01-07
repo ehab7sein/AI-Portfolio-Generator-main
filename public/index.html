@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portopia - Revolutionize Your Digital Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-purple: #7c3aed;
+            --dark-bg: #0a0a1a;
+            --darker-bg: #050510;
+            --text-gray: #a0a0b0;
+        }
+
+        body {
+            background: linear-gradient(180deg, #1a1a2e 0%, #0a0a1a 50%, #000000 100%);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(237, 58, 124, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .navbar {
+            background: rgba(10, 10, 26, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #ffffff !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-purple);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .btn-get-started {
+            background: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-get-started:hover {
+            background: #6d28d9;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
+        }
+
+        .hero-section {
+            padding: 120px 0 80px;
+            position: relative;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            color: #a0a0ff;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .btn-primary-large {
+            background: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .btn-primary-large:hover {
+            background: #6d28d9;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(124, 58, 237, 0.4);
+        }
+
+        .btn-secondary-large {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            margin-left: 1rem;
+        }
+
+        .btn-secondary-large:hover {
+            border-color: var(--primary-purple);
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        .feature-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-purple);
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+
+        .feature-text {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        .features-section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-purple);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-gray);
+            max-width: 800px;
+            margin: 0 auto 4rem;
+            font-size: 1.1rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            transition: all 0.3s;
+        }
+
+        .feature-box:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(124, 58, 237, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .feature-box-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(124, 58, 237, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: var(--primary-purple);
+        }
+
+        .feature-box-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .feature-box-text {
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        footer {
+            background: var(--darker-bg);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 4rem 0 2rem;
+            margin-top: 100px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-description {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+            max-width: 300px;
+        }
+
+        .footer-title {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-purple);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-icon:hover {
+            background: var(--primary-purple);
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 3rem;
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .feature-cards,
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-secondary-large {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+        }
+
+        .geometric-shape {
+            position: absolute;
+            opacity: 0.1;
+        }
+
+        .shape-1 {
+            top: 10%;
+            left: 5%;
+            width: 200px;
+        }
+
+        .shape-2 {
+            top: 20%;
+            right: 10%;
+            width: 250px;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <div class="logo-icon">
+                    <i class="fas fa-cube"></i>
+                </div>
+                Portopia
+            </a>
+            <div class="ms-auto d-flex align-items-center gap-3" id="navActions">
+                <!-- Auth buttons will be inserted here -->
+                <a href="login.html" class="btn btn-outline-light btn-sm px-4">Login</a>
+                <a href="signup.html" class="btn btn-get-started">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-badge">
+                <i class="fas fa-robot"></i>
+                Powered by Advanced AI
+            </div>
+            <h1 class="hero-title">
+                Revolutionize your digital<br>
+                <span class="text-gradient">portfolio creation</span>
+            </h1>
+            <p class="hero-subtitle">
+                Create stunning, professional quality portfolios in record time with our powerful AI toolkit. Elevate
+                your SAAS game today!
+            </p>
+            <div>
+                <button class="btn-primary-large">
+                    <i href=data-collection.html classs="fas fa-globe"></i>
+                    <a href=data-collection.html>Generate My Portfolio</a>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="btn-secondary-large">Learn More</button>
+
+            </div>
+
+            <!-- Feature Cards -->
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="feature-title">Lightning Fast</h3>
+                    <p class="feature-text">Generate portfolios in under 60 seconds</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3 class="feature-title">AI-Powered</h3>
+                    <p class="feature-text">Advanced algorithms create unique designs</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="feature-title">Auto Deploy</h3>
+                    <p class="feature-text">Instant deployment to custom subdomains</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="text-center">
+                <div class="section-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    Powerful Features
+                </div>
+                <h2 class="section-title">
+                    Everything you need to create<br>
+                    <span class="text-gradient">stunning portfolios</span>
+                </h2>
+                <p class="section-subtitle">
+                    Craft exceptional top-notch websites swiftly using our robust UI toolkit. Boost your SAAS
+                    performance now!
+                </p>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <div class="feature-box-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-box-title">AI-Powered Generation</h3>
+                    <p class="feature-box-text">Advanced machine learning algorithms create unique, professional
+                        portfolio designs tailored to your industry and style preferences.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-box-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="feature-box-title">Lightning Fast Deployment</h3>
+                    <p class="feature-box-text">Deploy your portfolio to a custom subdomain in seconds. No technical
+                        knowledge required - just click and launch.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-box-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="feature-box-title">Clean, Modern Code</h3>
+                    <p class="feature-box-text">Generated portfolios use the latest web technologies and best practices
+                        for optimal performance and SEO.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-box-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3 class="feature-box-title">Customizable Themes</h3>
+                    <p class="feature-box-text">Choose from various design styles or let our AI analyze your content to
+                        suggest the perfect aesthetic.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-box-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="feature-box-title">Auto Content Extraction</h3>
+                    <p class="feature-box-text">Our Gemini AI automatically extracts relevant information from your bio
+                        to populate portfolio sections.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-box-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="feature-box-title">Secure & Reliable</h3>
+                    <p class="feature-box-text">Built on trusted infrastructure with automatic backups and SSL
+                        certificates for all deployed portfolios.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="footer-brand">
+                        <div class="logo-icon">
+                            <i class="fas fa-cube"></i>
+                        </div>
+                        <strong>Portopia</strong>
+                    </div>
+                    <p class="footer-description">Create stunning professional portfolios in minutes with the power of
+                        AI.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h4 class="footer-title">Product</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Templates</a></li>
+                        <li><a href="#">Examples</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h4 class="footer-title">Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h4 class="footer-title">Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div>© 2024 Portopia. All rights reserved.</div>
+                <div>Powered by advanced AI technology</div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            const session = localStorage.getItem('session');
+            const navActions = document.getElementById('navActions');
+
+            if (session) {
+                navActions.innerHTML = `
+                    <a href="dashboard.html" class="btn btn-outline-light btn-sm px-4">Dashboard</a>
+                    <a href="data-collection.html" class="btn btn-get-started">Create New</a>
+                `;
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - My Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Cairo:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--primary);
+        }
+
+        .user-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-new {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-new:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .main-content {
+            padding: 40px 5%;
+        }
+
+        .header-section {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-section h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .header-section p {
+            color: var(--text-muted);
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .portfolio-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .portfolio-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-preview {
+            height: 180px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: rgba(99, 102, 241, 0.2);
+            position: relative;
+        }
+
+        .card-preview i {
+            transition: 0.5s;
+        }
+
+        .portfolio-card:hover .card-preview i {
+            transform: scale(1.2);
+            color: rgba(99, 102, 241, 0.4);
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .card-body h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .card-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .btn-action {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .btn-view {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-light);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-view:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .btn-copy {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-copy:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 100px 20px;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 80px;
+            color: rgba(255, 255, 255, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: 0.5s;
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #FFF;
+            border-bottom-color: var(--primary);
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #notification {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 25px;
+            border-radius: 12px;
+            z-index: 2000;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading-overlay" id="loader">
+        <span class="loader"></span>
+    </div>
+
+    <div id="notification"></div>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <i class="fas fa-sparkles"></i>
+            <span>Portopia</span>
+        </a>
+        <div class="user-nav">
+            <span id="userName" style="font-weight: 600;"></span>
+            <a href="data-collection.html" class="btn-new">
+                <i class="fas fa-plus"></i>
+                <span>Create New</span>
+            </a>
+            <a href="#" onclick="logout()" style="color: #ef4444; text-decoration: none; font-size: 14px;">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="header-section">
+            <div>
+                <h1>My Portfolio</h1>
+                <p>Here you can find all the websites you have created and published</p>
+            </div>
+        </div>
+
+        <div class="portfolio-grid" id="portfolioGrid">
+            <!-- Portfolios will be loaded here -->
+        </div>
+    </main>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const session = localStorage.getItem('session');
+
+        if (!session || !user.id) {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('userName').textContent = user.user_metadata?.full_name || 'User';
+
+        function showNotif(msg) {
+            const n = document.getElementById('notification');
+            n.textContent = msg;
+            n.style.display = 'block';
+            setTimeout(() => n.style.display = 'none', 3000);
+        }
+
+        async function loadPortfolios() {
+            try {
+                const sessionStr = localStorage.getItem('session');
+                const session = sessionStr ? JSON.parse(sessionStr) : null;
+                const token = session?.access_token;
+
+                const res = await fetch(`/api/user-portfolios/${user.id}`, {
+                    headers: {
+                        'Authorization': token ? `Bearer ${token}` : ''
+                    }
+                });
+                const data = await res.json();
+
+                const grid = document.getElementById('portfolioGrid');
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
+
+                if (data.success && data.portfolios.length > 0) {
+                    grid.innerHTML = data.portfolios.map(p => `
+                        <div class="portfolio-card">
+                            <div class="card-preview">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="card-body">
+                                <h3>Portfolio #${p.slug}</h3>
+                                <div class="card-meta">
+                                    <span><i class="far fa-calendar-alt me-1"></i> ${new Date(p.created_at).toLocaleDateString('en-US')}</span>
+                                    <span>Active <i class="fas fa-check-circle" style="color: var(--accent);"></i></span>
+                                </div>
+                                <div class="card-actions">
+                                    <a href="/v/${p.slug}" target="_blank" class="btn-action btn-view">
+                                        <i class="fas fa-external-link-alt"></i> View
+                                    </a>
+                                    <button onclick="editPortfolio('${p.slug}')" class="btn-action btn-view" style="background: rgba(16, 185, 129, 0.1); color: var(--accent); border-color: rgba(16, 185, 129, 0.2);">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button onclick="renamePortfolio('${p.slug}')" class="btn-action" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-color: rgba(59, 130, 246, 0.2);">
+                                        <i class="fas fa-pen"></i> Rename
+                                    </button>
+                                    <button onclick="copyLink('${window.location.origin}/v/${p.slug}')" class="btn-action btn-copy">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                    <button onclick="deletePortfolio('${p.slug}')" class="btn-action btn-delete" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2);">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-folder-open"></i>
+                            <h2>No previous work yet</h2>
+                            <p style="margin-top: 10px; color: var(--text-muted);">Start now by creating your first portfolio using AI</p>
+                            <br>
+                            <a href="data-collection.html" class="btn-new" style="display: inline-flex;">Start Now</a>
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                console.error(err);
+                showNotif('Failed to load data');
+            }
+        }
+
+        async function editPortfolio(slug) {
+            document.getElementById('loader').style.display = 'flex';
+            document.getElementById('loader').style.opacity = '1';
+            try {
+                const res = await fetch(`/api/portfolio/${slug}`);
+                const data = await res.json();
+                if (data.success) {
+                    localStorage.setItem('lastGeneratedCode', data.portfolio.html);
+                    localStorage.setItem('currentEditingSlug', data.portfolio.slug);
+                    window.location.href = 'editor.html';
+                } else {
+                    showNotif('Failed to fetch website data');
+                }
+            } catch (err) {
+                console.error(err);
+                showNotif('An error occurred while trying to edit');
+            } finally {
+                document.getElementById('loader').style.display = 'none';
+            }
+        }
+
+        function copyLink(link) {
+            navigator.clipboard.writeText(link).then(() => {
+                showNotif('Link copied successfully!');
+            });
+        }
+
+        async function deletePortfolio(slug) {
+            if (!confirm('Are you sure you want to delete this portfolio? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const sessionStr = localStorage.getItem('session');
+                const session = sessionStr ? JSON.parse(sessionStr) : null;
+                const token = session?.access_token;
+
+                const response = await fetch(`/api/portfolio/${slug}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token ? `Bearer ${token}` : ''
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotif('Portfolio deleted successfully!', 'success');
+                    // Reload portfolios
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    showNotif('Failed to delete portfolio: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                showNotif('An error occurred during deletion', 'error');
+            }
+        }
+
+        async function renamePortfolio(oldSlug) {
+            const newSlug = prompt('Enter new URL name (letters, numbers, hyphens only):', oldSlug);
+
+            if (!newSlug || newSlug === oldSlug) {
+                return;
+            }
+
+            // Validate slug format
+            const slugRegex = /^[a-z0-9-]+$/;
+            if (!slugRegex.test(newSlug)) {
+                showNotif('Invalid URL name. Use only lowercase letters, numbers, and hyphens.', 'error');
+                return;
+            }
+
+            if (newSlug.length < 3 || newSlug.length > 50) {
+                showNotif('URL name must be between 3 and 50 characters.', 'error');
+                return;
+            }
+
+            try {
+                document.getElementById('loader').style.display = 'flex';
+                document.getElementById('loader').style.opacity = '1';
+
+                const sessionStr = localStorage.getItem('session');
+                const session = sessionStr ? JSON.parse(sessionStr) : null;
+                const token = session?.access_token;
+
+                const response = await fetch(`/api/portfolio/${oldSlug}/rename`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token ? `Bearer ${token}` : ''
+                    },
+                    body: JSON.stringify({ newSlug })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotif('Portfolio renamed successfully!', 'success');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    showNotif('Failed to rename: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Rename error:', error);
+                showNotif('An error occurred during renaming', 'error');
+            } finally {
+                document.getElementById('loader').style.display = 'none';
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+
+        window.onload = loadPortfolios;
+    </script>
+</body>
+
+</html>

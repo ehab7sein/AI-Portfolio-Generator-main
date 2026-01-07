@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Portfolio Editor - Portopia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#6e63c5',
+                        'surface-dark': '#1E1E2B',
+                        'sidebar-dark': '#0F0F1B',
+                        'border-dark': 'rgba(255,255,255,0.1)'
+                    }
+                }
+            }
+        }
+    </script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Outfit:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            height: 60px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .view-toggle {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .toggle-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .toggle-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn {
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Main Layout */
+        main {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar Chat */
+        .sidebar {
+            width: 350px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .chat-header {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border-bottom-left-radius: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--accent);
+            color: white;
+            border-bottom-right-radius: 2px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .chat-input-area {
+            padding: 20px;
+            background: rgba(25, 25, 25, 0.5);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .chat-input-container:focus-within {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+
+        .chat-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            resize: none;
+            padding: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            max-height: 120px;
+            outline: none;
+        }
+
+        .btn-send {
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Preview Area */
+        .preview-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #000;
+            position: relative;
+        }
+
+        .preview-header {
+            height: 40px;
+            background: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            gap: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .preview-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Device Toggle Buttons */
+        .device-toggle {
+            display: flex;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        .device-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .device-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .device-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+            background: white;
+            transition: all 0.3s ease;
+            margin: 0 auto;
+        }
+
+        /* Device Sizes */
+        iframe.mobile {
+            max-width: 375px;
+            height: 667px;
+        }
+
+        iframe.tablet {
+            max-width: 768px;
+            height: 1024px;
+        }
+
+        iframe.desktop {
+            max-width: 100%;
+            height: 100%;
+        }
+
+        /* Code Editor Container */
+        .code-editor-container {
+            position: absolute;
+            top: 40px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #1E1E2B;
+            display: none;
+            flex-direction: column;
+            z-index: 5;
+        }
+
+        .code-editor-container.active {
+            display: flex;
+        }
+
+        /* Line Numbers Styling */
+        .line-numbers {
+            min-width: 60px;
+            user-select: none;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .line-numbers div {
+            padding-right: 8px;
+        }
+
+        /* Code Area Styling */
+        #codeArea {
+            color: #d4d4d4;
+            caret-color: #6e63c5;
+        }
+
+        #codeArea::selection {
+            background: rgba(110, 99, 197, 0.3);
+        }
+
+        /* Sync scrolling */
+        .editor-surface {
+            overflow: auto;
+        }
+
+        /* Bottom Editor */
+        .bottom-editor {
+            height: 200px;
+            background: #1e1e1e;
+            border-top: 1px solid var(--border);
+            display: none;
+            /* Hidden by default, can be toggled */
+            flex-direction: column;
+        }
+
+        .editor-header {
+            height: 35px;
+            background: #2d2d2d;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        textarea#codeArea {
+            flex: 1;
+            width: 100%;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            border: none;
+            resize: none;
+            outline: none;
+            line-height: 1.5;
+        }
+
+        /* Notifications */
+        #notification {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: white;
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #FFF;
+            border-bottom-color: var(--primary);
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            color: white;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <span class="loader"></span>
+        <div class="loading-text" id="loadingText">Processing your request...</div>
+    </div>
+
+    <div id="notification"></div>
+
+    <header>
+        <a href="index.html" class="logo">
+            <i class="fas fa-cube"></i>
+            <span>Portopia</span>
+        </a>
+        <div class="header-actions">
+            <div class="view-toggle">
+                <button class="toggle-btn active" id="previewBtn" onclick="switchView('preview')">
+                    <i class="fas fa-eye"></i>
+                    Preview
+                </button>
+                <button class="toggle-btn" id="codeBtn" onclick="switchView('code')">
+                    <i class="fas fa-code"></i>
+                    Code
+                </button>
+            </div>
+            <button class="btn btn-primary" onclick="publishFinal()">
+                <i class="fas fa-paper-plane"></i>
+                Publish Website
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Sidebar Chat -->
+        <section class="sidebar">
+            <div class="chat-header">
+                <i class="fas fa-magic"></i>
+                AI Editing Assistant (Gemini)
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai">
+                    Hello! I'm your AI assistant. Tell me what changes you want to make to your design (change colors,
+                    add sections, edit text...) and I'll update the code instantly.
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <div class="chat-input-container">
+                    <textarea class="chat-input" id="chatInput"
+                        placeholder="Request a change... (Example: Make the background darker)"></textarea>
+                    <button class="btn-send" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Preview Area -->
+        <section class="preview-container">
+            <div class="preview-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="preview-dot" style="background: #ff5f56;"></div>
+                    <div class="preview-dot" style="background: #ffbd2e;"></div>
+                    <div class="preview-dot" style="background: #27c93f;"></div>
+                    <span style="color: #94a3b8; font-size: 0.8rem; margin-right: 10px;">Live Website Preview</span>
+                </div>
+
+                <!-- Device Size Toggle -->
+                <div class="device-toggle">
+                    <button class="device-btn" onclick="setDeviceSize('mobile')" title="Mobile (375px)">
+                        <i class="fas fa-mobile-alt"></i>
+                    </button>
+                    <button class="device-btn" onclick="setDeviceSize('tablet')" title="Tablet (768px)">
+                        <i class="fas fa-tablet-alt"></i>
+                    </button>
+                    <button class="device-btn active" onclick="setDeviceSize('desktop')" title="Desktop (100%)">
+                        <i class="fas fa-desktop"></i>
+                    </button>
+                </div>
+            </div>
+            <iframe id="previewIframe"></iframe>
+
+            <!-- Code Editor (Full Screen Toggle) -->
+            <div class="code-editor-container" id="codeEditorContainer">
+                <!-- Editor Tabs -->
+                <div class="flex items-center bg-[#0F0F1B] border-b border-border-dark h-10 select-none">
+                    <!-- Active Tab (HTML Only) -->
+                    <div
+                        class="flex items-center gap-2 px-4 h-full bg-surface-dark border-t-2 border-t-primary text-xs font-medium text-white min-w-[140px] justify-between group">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-file-code text-orange-400 text-sm"></i>
+                            <span>index.html</span>
+                        </div>
+                    </div>
+                    <div class="flex-1"></div>
+                </div>
+
+                <!-- Editor Surface with Line Numbers -->
+                <div class="flex-1 overflow-auto bg-[#1E1E2B] font-mono text-sm relative flex">
+                    <!-- Line Numbers -->
+                    <div class="line-numbers bg-[#151523] text-right pr-4 pl-4 py-4 select-none"
+                        style="color: #6272a4; font-size: 13px; line-height: 1.6;">
+                        <div id="lineNumbers"></div>
+                    </div>
+
+                    <!-- Code Content -->
+                    <textarea id="codeArea" oninput="updatePreviewFromEditor(); updateLineNumbers()"
+                        class="flex-1 bg-transparent text-white p-4 resize-none outline-none"
+                        style="font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace; font-size: 13px; line-height: 1.6; tab-size: 4;"
+                        spellcheck="false"></textarea>
+                </div>
+
+                <!-- Status Bar -->
+                <div
+                    class="h-6 bg-primary/10 border-t border-border-dark flex items-center px-4 justify-between text-[10px] text-white/60">
+                    <div class="flex items-center gap-4">
+                        <span class="flex items-center gap-1">
+                            <i class="fas fa-code text-[12px]"></i> HTML
+                        </span>
+                        <span id="cursorPosition">Ln 1, Col 1</span>
+                        <span>UTF-8</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                        <span>Ready</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let currentHtml = '';
+
+        window.onload = () => {
+            const savedCode = localStorage.getItem('lastGeneratedCode');
+            if (savedCode) {
+                currentHtml = savedCode;
+                updatePreview();
+                document.getElementById('codeArea').value = currentHtml;
+            } else {
+                window.location.href = 'design-selection.html';
+            }
+
+            // Auto-resize chat input
+            const chatInput = document.getElementById('chatInput');
+            chatInput.addEventListener('input', function () {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+            // Handle Enter key
+            chatInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Initialize line numbers and cursor tracking
+            updateLineNumbers();
+
+            const codeArea = document.getElementById('codeArea');
+            codeArea.addEventListener('click', updateCursorPosition);
+            codeArea.addEventListener('keyup', updateCursorPosition);
+            codeArea.addEventListener('scroll', syncLineNumbersScroll);
+
+            // Set default device size to desktop
+            const iframe = document.getElementById('previewIframe');
+            iframe.classList.add('desktop');
+        };
+
+        function updateLineNumbers() {
+            const codeArea = document.getElementById('codeArea');
+            const lineNumbersDiv = document.getElementById('lineNumbers');
+            const lines = codeArea.value.split('\n');
+            const lineCount = lines.length;
+
+            let lineNumbersHTML = '';
+            for (let i = 1; i <= lineCount; i++) {
+                lineNumbersHTML += `<div>${i}</div>`;
+            }
+            lineNumbersDiv.innerHTML = lineNumbersHTML;
+        }
+
+        function updateCursorPosition() {
+            const codeArea = document.getElementById('codeArea');
+            const cursorPos = codeArea.selectionStart;
+            const textBeforeCursor = codeArea.value.substring(0, cursorPos);
+            const lines = textBeforeCursor.split('\n');
+            const lineNumber = lines.length;
+            const columnNumber = lines[lines.length - 1].length + 1;
+
+            document.getElementById('cursorPosition').textContent = `Ln ${lineNumber}, Col ${columnNumber}`;
+        }
+
+        function syncLineNumbersScroll() {
+            const codeArea = document.getElementById('codeArea');
+            const lineNumbersDiv = document.getElementById('lineNumbers').parentElement;
+            lineNumbersDiv.scrollTop = codeArea.scrollTop;
+        }
+
+        function updatePreview() {
+            const iframe = document.getElementById('previewIframe');
+            const doc = iframe.contentDocument || iframe.contentWindow.document;
+            doc.open();
+            doc.write(currentHtml);
+            doc.close();
+        }
+
+        function updatePreviewFromEditor() {
+            currentHtml = document.getElementById('codeArea').value;
+            updatePreview();
+            updateLineNumbers();
+            updateCursorPosition();
+            localStorage.setItem('lastGeneratedCode', currentHtml);
+        }
+
+        function switchView(view) {
+            const previewBtn = document.getElementById('previewBtn');
+            const codeBtn = document.getElementById('codeBtn');
+            const codeContainer = document.getElementById('codeEditorContainer');
+            const iframe = document.getElementById('previewIframe');
+
+            if (view === 'preview') {
+                previewBtn.classList.add('active');
+                codeBtn.classList.remove('active');
+                codeContainer.classList.remove('active');
+                iframe.style.display = 'block';
+            } else {
+                codeBtn.classList.add('active');
+                previewBtn.classList.remove('active');
+                codeContainer.classList.add('active');
+                iframe.style.display = 'none';
+            }
+        }
+
+        function setDeviceSize(size) {
+            const iframe = document.getElementById('previewIframe');
+            const buttons = document.querySelectorAll('.device-btn');
+
+            // Remove all size classes
+            iframe.classList.remove('mobile', 'tablet', 'desktop');
+
+            // Add the selected size class
+            iframe.classList.add(size);
+
+            // Update active button
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.device-btn').classList.add('active');
+        }
+
+        function toggleEditor() {
+            const editor = document.getElementById('bottomEditor');
+            editor.style.display = editor.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function showNotif(msg, type = 'success') {
+            const n = document.getElementById('notification');
+            n.textContent = msg;
+            n.style.background = type === 'success' ? '#059669' : '#dc2626';
+            n.style.display = 'block';
+            setTimeout(() => n.style.display = 'none', 3000);
+        }
+
+        // Simulate streaming code display
+        function streamCodeToEditor(code) {
+            const codeArea = document.getElementById('codeArea');
+            codeArea.value = '';
+            let index = 0;
+            const chunkSize = 50; // Characters per frame
+
+            function writeChunk() {
+                if (index < code.length) {
+                    const chunk = code.substring(index, index + chunkSize);
+                    codeArea.value += chunk;
+                    index += chunkSize;
+                    codeArea.scrollTop = codeArea.scrollHeight;
+
+                    // Update line numbers and cursor position during streaming
+                    updateLineNumbers();
+                    updateCursorPosition();
+
+                    requestAnimationFrame(writeChunk);
+                } else {
+                    // Finished streaming - save and reload page
+                    currentHtml = code;
+                    localStorage.setItem('lastGeneratedCode', code);
+
+                    // Show completion message
+                    showNotif('Update successful! Reloading editor...', 'success');
+
+                    // Reload the entire editor after 1 second
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                }
+            }
+
+            // Auto-switch to code view during streaming
+            switchView('code');
+            writeChunk();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const prompt = input.value.trim();
+            if (!prompt) return;
+
+            // Add user message to UI
+            addMessage(prompt, 'user');
+            input.value = '';
+
+            // Show loading
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            document.getElementById('loadingText').textContent = 'جاري تعديل الكود بالذكاء الاصطناعي...';
+
+            try {
+                const response = await fetch('/api/edit-portfolio', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        html: currentHtml,
+                        prompt: prompt,
+                        history: [] // Future: can add chat history here
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Stream the code to the editor with animation
+                    streamCodeToEditor(result.html);
+
+                    // Update storage
+                    localStorage.setItem('lastGeneratedCode', result.html);
+
+                    addMessage('✨ Your website has been updated successfully! You can see the changes now in the preview.', 'ai');
+                } else {
+                    addMessage('❌ Sorry, I couldn\'t complete the edit: ' + result.error, 'ai');
+                }
+            } catch (err) {
+                console.error(err);
+                addMessage('⚠️ Connection error to server, please try again.', 'ai');
+            } finally {
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }
+        }
+
+        function addMessage(text, side) {
+            const chat = document.getElementById('chatMessages');
+            const msg = document.createElement('div');
+            msg.className = `message ${side}`;
+            msg.textContent = text;
+            chat.appendChild(msg);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        async function publishFinal() {
+            if (!confirm('هل أنت متأكد من رغبتك في نشر نسخة الموقع هذه؟')) return;
+
+            const sessionStr = localStorage.getItem('session');
+            const userStr = localStorage.getItem('user');
+            const editingSlug = localStorage.getItem('currentEditingSlug'); // الرابط الحالي إذا كنا نعدل
+
+            let accessToken = null;
+            let userId = null;
+
+            if (sessionStr && userStr) {
+                try {
+                    const session = JSON.parse(sessionStr);
+                    const user = JSON.parse(userStr);
+                    accessToken = session.access_token;
+                    userId = user.id;
+                } catch (e) {
+                    console.error('Session parse error');
+                }
+            }
+
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            document.getElementById('loadingText').textContent = editingSlug ? 'جاري تحديث موقعك...' : 'جاري نشر موقعك أونلاين...';
+
+            try {
+                const response = await fetch('/api/publish', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': accessToken ? `Bearer ${accessToken}` : ''
+                    },
+                    body: JSON.stringify({
+                        html: currentHtml,
+                        userId: userId,
+                        slug: editingSlug // إرسال السلاج إذا كان موجوداً سيقوم السيرفر بالتحديث
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const liveUrl = window.location.origin + '/v/' + result.slug;
+
+                    if (result.updated) {
+                        showNotif('Website updated successfully with the current link!', 'success');
+                    } else if (result.isGuest) {
+                        showNotif('Published as guest (session expired), website is public!', 'success');
+                    } else {
+                        showNotif('Your website has been published successfully!', 'success');
+                    }
+
+                    addMessage(`Great work! Your website is now ${result.updated ? 'updated' : 'live'} on the internet:\n${liveUrl}`, 'ai');
+
+                    setTimeout(() => {
+                        // عند النجاح في التحديث أو النشر الجديد، ننتقل للوحة التحكم
+                        localStorage.removeItem('currentEditingSlug'); // مسح حالة التعديل بعد النجاح
+                        window.location.href = 'dashboard.html';
+                    }, 4000);
+                } else {
+                    if (result.error && result.error.includes('JWT expired')) {
+                        showNotif('Session expired. Try publishing again, it will be published as guest.', 'error');
+                        localStorage.removeItem('session');
+                    } else {
+                        showNotif('Publishing failed: ' + result.error, 'error');
+                    }
+                }
+            } catch (error) {
+                console.error('Publish error:', error);
+                showNotif('An error occurred during publishing, try again', 'error');
+            } finally {
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }
+        }
+
+        // Allow Enter to send message
+        document.getElementById('chatInput').onkeydown = (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        };
+    </script>
+</body>
+
+</html>

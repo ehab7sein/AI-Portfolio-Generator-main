@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Selection - Portopia</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script
+        src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@latest/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: #e0e0e0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            font-size: 16px;
+            color: #8b8bff;
+        }
+
+        .logo i {
+            font-size: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #a0a0a0;
+            font-size: 1.1rem;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 40px 0;
+        }
+
+        .step {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #2a2a3e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .main-card {
+            background: rgba(30, 30, 45, 0.8);
+            border-radius: 20px;
+            padding: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .brain-icon {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .section-description {
+            color: #a0a0a0;
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        textarea {
+            width: 100%;
+            background: rgba(20, 20, 30, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        textarea::placeholder {
+            color: #666;
+        }
+
+        .style-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .style-tag {
+            padding: 12px 24px;
+            background: rgba(20, 20, 30, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .style-tag:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .style-tag.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            color: white;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        button {
+            padding: 15px 35px;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #a0a0a0;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 45px;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(102, 126, 234, 0.3);
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .result-container {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .result-container.show {
+            display: block;
+        }
+
+        .code-result {
+            background: rgba(20, 20, 30, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn-copy,
+        .btn-download {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-copy {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-publish {
+            background: linear-gradient(135deg, #2ed573 0%, #7bed9f 100%);
+            color: #1e1e2d;
+            border: none;
+            box-shadow: 0 4px 15px rgba(46, 213, 115, 0.3);
+        }
+
+        .btn-publish:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 213, 115, 0.5);
+        }
+
+        .btn-publish:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .live-link-container {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(46, 213, 115, 0.1);
+            border: 1px dashed #2ed573;
+            border-radius: 12px;
+            text-align: right;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-copy:hover {
+            background: rgba(102, 126, 234, 0.3);
+        }
+
+        .mic-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            flex-shrink: 0;
+        }
+
+        .mic-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .mic-btn.recording {
+            background: #ff4757;
+            animation: pulse-red 1.5s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+            }
+
+            70% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 10px rgba(255, 71, 87, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+            }
+        }
+
+        /* Notification Toast */
+        .notification-toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            background: rgba(30, 30, 45, 0.95);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            border-left: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 10000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            min-width: 300px;
+        }
+
+        .notification-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification-toast.error {
+            border-left-color: #ff4757;
+        }
+
+        .notification-toast.success {
+            border-left-color: #2ed573;
+        }
+
+        .notification-toast.info {
+            border-left-color: #667eea;
+        }
+
+        .notification-toast i {
+            font-size: 1.4rem;
+        }
+
+        .notification-toast span {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Language Selector Modal */
+        .lang-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 11000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lang-modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lang-modal {
+            background: #1e1e2d;
+            padding: 35px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 420px;
+            width: 90%;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .lang-modal-overlay.show .lang-modal {
+            transform: scale(1);
+        }
+
+        .lang-modal h3 {
+            margin-bottom: 30px;
+            color: #ffffff;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .lang-options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .lang-opt-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 25px;
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .lang-opt-btn:hover {
+            background: rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .lang-opt-btn i {
+            font-size: 2.22rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .lang-opt-btn span {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .form-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .form-group-header label {
+            margin-bottom: 0;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .model-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .model-option {
+            background: rgba(20, 20, 30, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .model-option:hover:not(.disabled) {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .model-option.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.2);
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .model-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-style: dashed;
+        }
+
+        .model-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .model-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .model-status {
+            font-size: 0.8rem;
+            color: #a0a0a0;
+        }
+
+        .warning-icon {
+            color: #ff4d4d;
+            font-size: 1.1rem;
+        }
+
+        .check-icon {
+            color: #4ade80;
+            display: none;
+        }
+
+        .model-option.selected .check-icon {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .main-card {
+                padding: 30px 20px;
+            }
+
+            .steps {
+                gap: 20px;
+            }
+
+            .step {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-sparkles"></i>
+                <span>AI Portfolio Generator</span>
+            </div>
+            <h1>اختر تصميمك</h1>
+            <p class="subtitle">أخبر الذكاء الاصطناعي عن التصميم الذي تريده</p>
+        </div>
+
+        <div class="steps">
+            <div class="step">1</div>
+            <div class="step active">2</div>
+
+        </div>
+
+        <div class="main-card">
+            <div class="section-header">
+                <div class="brain-icon">
+                    <i class="fas fa-palette"></i>
+                </div>
+                <h2 class="section-title">وصف التصميم</h2>
+                <p class="section-description">أخبر الذكاء الاصطناعي عن نوع التصميم الذي تريده</p>
+            </div>
+
+            <div class="form-group">
+                <label>محرك الذكاء الاصطناعي</label>
+                <div class="model-selector" id="modelSelector">
+                    <!-- Models will be loaded here -->
+                    <div class="model-option loading-models">
+                        <i class="fas fa-spinner fa-spin"></i> جاري التحقق من المحركات...
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group-header">
+                    <label>وصف التصميم المطلوب</label>
+                    <button type="button" class="mic-btn" onclick="startRecognition('designPrompt')"
+                        id="mic-designPrompt" title="تحدث لإدخال النص">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+                <textarea rows="5" id="designPrompt"
+                    placeholder="مثال: تصميم حديث وأنيق بألوان داكنة، مناسب لمطور ويب. أريد خطوط نظيفة وتأثيرات خفيفة..."></textarea>
+            </div>
+
+            <div class="style-tags">
+                <div class="style-tag" onclick="setDesignPrompt('تصميم نظيف ومينيمالي بألوان فاتحة، بسيط وأنيق')">نظيف
+                    ومينيمالي</div>
+                <div class="style-tag" onclick="setDesignPrompt('تصميم احترافي بألوان داكنة، مناسب للعمل')">احترافي داكن
+                </div>
+                <div class="style-tag" onclick="setDesignPrompt('تصميم حديث بألوان زرقاء، بسيط وجميل')">حديث وأزرق</div>
+                <div class="style-tag" onclick="setDesignPrompt('تصميم أنيق بألوان رمادية، كلاسيكي ومهني')">أنيق ورمادي
+                </div>
+                <div class="style-tag" onclick="setDesignPrompt('تصميم بسيط بألوان خضراء، طبيعي وهادئ')">بسيط وأخضر
+                </div>
+                <div class="style-tag" onclick="setDesignPrompt('تصميم نظيف بألوان متدرجة لطيفة، جميل وبسيط')">نظيف
+                    ومتدرج</div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>جاري إنشاء وتحسين البورتوفوليو...</p>
+                <small style="color: #a0a0a0; margin-top: 10px; display: block;">
+                    الخطوة 1: إنشاء التصميم الأساسي<br>
+                    الخطوة 2: تحسين التصميم بالذكاء الاصطناعي
+                </small>
+            </div>
+
+            <div class="result-container" id="resultContainer">
+                <h3 style="margin-bottom: 20px; color: #ffffff;">الكود المُولد:</h3>
+                <div class="code-result" id="codeResult"></div>
+                <div class="action-buttons">
+                    <button class="btn-copy" onclick="copyCode()">
+                        <i class="fas fa-copy me-2"></i>نسخ الكود
+                    </button>
+                    <button class="btn-download" onclick="downloadCode()">
+                        <i class="fas fa-download me-2"></i>تنزيل الملف
+                    </button>
+                    <button class="btn-publish btn-copy" onclick="publishOnline()" id="publishBtn">
+                        <i class="fas fa-globe me-2"></i>نشر أونلاين
+                    </button>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-cancel" onclick="window.location.href='data-collection.html'">العودة</button>
+                <button class="btn-next" onclick="generatePortfolio()">إنشاء البورتوفوليو</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="lang-modal-overlay" id="langModal">
+        <div class="lang-modal">
+            <h3>اختر لغة الاستماع</h3>
+            <div class="lang-options">
+                <button class="lang-opt-btn" onclick="selectLanguage('ar-EG')">
+                    <i class="fas fa-language"></i>
+                    <span>العربية</span>
+                </button>
+                <button class="lang-opt-btn" onclick="selectLanguage('en-US')">
+                    <i class="fas fa-globe"></i>
+                    <span>English</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load user data from sessionStorage
+        const userData = JSON.parse(sessionStorage.getItem('portfolioData') || '{}');
+        let selectedProvider = 'gemini'; // Default
+        let azureSpeechConfig = null;
+        let activeRecognizer = null;
+        let currentMicTarget = null;
+        let pendingTargetId = null;
+
+        // Fetch Azure Speech config from server
+        async function fetchSpeechConfig() {
+            try {
+                const response = await fetch('/api/config');
+                azureSpeechConfig = await response.json();
+            } catch (err) {
+                console.error('Failed to fetch speech config:', err);
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `notification-toast ${type}`;
+            const icon = type === 'error' ? 'fa-exclamation-circle' : (type === 'success' ? 'fa-check-circle' : 'fa-info-circle');
+            toast.innerHTML = `<i class="fas ${icon}"></i><span>${message}</span>`;
+            document.body.appendChild(toast);
+
+            // Trigger show
+            setTimeout(() => toast.classList.add('show'), 100);
+
+            // Remove after 4 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 500);
+            }, 4000);
+        }
+
+        function selectLanguage(lang) {
+            document.getElementById('langModal').classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('langModal').style.display = 'none';
+                startRecognitionProcess(pendingTargetId, lang);
+            }, 300);
+        }
+
+        function startRecognition(targetId) {
+            // If there's an active recognizer, stop it
+            if (activeRecognizer) {
+                const micBtn = document.getElementById('mic-' + currentMicTarget);
+                activeRecognizer.stopContinuousRecognitionAsync(() => {
+                    activeRecognizer.close();
+                    activeRecognizer = null;
+                    if (micBtn) micBtn.classList.remove('recording');
+                    showNotification('تم إيقاف الاستماع', 'info');
+
+                    // If clicked a different mic, show language choice for it
+                    if (currentMicTarget !== targetId) {
+                        currentMicTarget = null;
+                        startRecognition(targetId);
+                    } else {
+                        currentMicTarget = null;
+                    }
+                });
+                return;
+            }
+
+            // Show language selection modal
+            pendingTargetId = targetId;
+            const modal = document.getElementById('langModal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('show'), 10);
+        }
+
+        async function startRecognitionProcess(targetId, selectedLang) {
+            const micBtn = document.getElementById('mic-' + targetId);
+            const targetTextarea = document.getElementById(targetId);
+            const sdk = window.SpeechSDK;
+
+            if (!azureSpeechConfig || !azureSpeechConfig.azureSpeechKey) {
+                showNotification('يرجى التأكد من إعداد مفاتيح Azure Speech في ملف .env', 'error');
+                return;
+            }
+
+            if (!sdk) {
+                showNotification('تعذر تحميل خدمة التعرف على الصوت. يرجى إعادة تحميل الصفحة.', 'error');
+                return;
+            }
+
+            try {
+                const speechConfig = sdk.SpeechConfig.fromSubscription(
+                    azureSpeechConfig.azureSpeechKey,
+                    azureSpeechConfig.azureSpeechRegion
+                );
+
+                // Set explicitly selected language
+                speechConfig.speechRecognitionLanguage = selectedLang;
+
+                const audioConfig = sdk.AudioConfig.fromDefaultMicrophoneInput();
+                const recognizer = new sdk.SpeechRecognizer(speechConfig, audioConfig);
+
+                micBtn.classList.add('recording');
+                const langName = selectedLang === 'ar-EG' ? 'العربية' : 'English';
+                showNotification(`الاستماع مستمر (${langName})... اضغط الميكروفون للإيقاف`, 'success');
+
+                recognizer.recognized = (s, e) => {
+                    if (e.result.reason === sdk.ResultReason.RecognizedSpeech) {
+                        const text = e.result.text;
+                        if (text) {
+                            targetTextarea.value = (targetTextarea.value ? targetTextarea.value + ' ' : '') + text;
+                        }
+                    }
+                };
+
+                recognizer.canceled = (s, e) => {
+                    console.error("Canceled: " + e.errorDetails);
+                    micBtn.classList.remove('recording');
+                    activeRecognizer = null;
+                    currentMicTarget = null;
+                };
+
+                recognizer.sessionStopped = (s, e) => {
+                    micBtn.classList.remove('recording');
+                    activeRecognizer = null;
+                    currentMicTarget = null;
+                };
+
+                recognizer.startContinuousRecognitionAsync(() => {
+                    activeRecognizer = recognizer;
+                    currentMicTarget = targetId;
+                }, err => {
+                    showNotification('خطأ في بدء التعرف المستمر', 'error');
+                    console.error(err);
+                    micBtn.classList.remove('recording');
+                });
+
+            } catch (err) {
+                micBtn.classList.remove('recording');
+                showNotification('تعذر تشغيل خدمة التعرف على الصوت', 'error');
+                console.error(err);
+            }
+        }
+
+        // Load models status
+        async function loadModelsStatus() {
+            const selector = document.getElementById('modelSelector');
+            try {
+                const response = await fetch('/api/ai-status');
+                const status = await response.json();
+
+                selector.innerHTML = ''; // Clear loading
+
+                const providers = [
+                    { id: 'gemini', name: status.models.gemini, icon: 'fa-google', active: status.gemini },
+                    { id: 'azure', name: status.models.azure, icon: 'fa-microsoft', active: status.azure },
+                    { id: 'openrouter', name: status.models.openrouter, icon: 'fa-robot', active: status.openrouter }
+                ];
+
+                providers.forEach(p => {
+                    const option = document.createElement('div');
+                    option.className = `model-option ${!p.active ? 'disabled' : ''} ${p.id === selectedProvider && p.active ? 'selected' : ''}`;
+                    if (p.active) {
+                        option.onclick = () => selectModel(p.id);
+                    }
+
+                    option.innerHTML = `
+                        <div class="model-info">
+                            <i class="fab ${p.icon}"></i>
+                            <div>
+                                <div class="model-name">${p.name}</div>
+                                <div class="model-status">${p.active ? 'جاهز للاستخدام' : 'غير متوفر - تنقصه إعدادات .env'}</div>
+                            </div>
+                        </div>
+                        ${p.active ? '<i class="fas fa-check-circle check-icon"></i>' : '<i class="fas fa-exclamation-triangle warning-icon" title="هذا الموديل غير مكون في ملف الـ .env"></i>'}
+                    `;
+                    selector.appendChild(option);
+
+                    // If default gemini is disabled, pick first active
+                    if (p.id === 'gemini' && !p.active) {
+                        const firstActive = providers.find(pr => pr.active);
+                        if (firstActive) selectedProvider = firstActive.id;
+                    }
+                });
+
+                // Update selection visual
+                selectModel(selectedProvider);
+
+            } catch (error) {
+                selector.innerHTML = '<div class="text-danger">فشل تحميل حالة المحركات. تأكد من تشغيل السيرفر.</div>';
+            }
+        }
+
+        function selectModel(id) {
+            selectedProvider = id;
+            document.querySelectorAll('.model-option').forEach(opt => {
+                opt.classList.remove('selected');
+                const modelNameElement = opt.querySelector('.model-name');
+                if (modelNameElement && modelNameElement.textContent.toLowerCase().includes(id === 'openrouter' ? 'openrouter' : (id === 'azure' ? 'azure' : 'gemini'))) {
+                    opt.classList.add('selected');
+                }
+            });
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            loadModelsStatus();
+            fetchSpeechConfig();
+        };
+
+        function setDesignPrompt(prompt) {
+            document.getElementById('designPrompt').value = prompt;
+        }
+
+        async function generatePortfolio() {
+            const designPrompt = document.getElementById('designPrompt').value;
+
+            if (!designPrompt.trim()) {
+                showNotification('يرجى كتابة وصف التصميم', 'error');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('resultContainer').classList.remove('show');
+
+            try {
+                // Step 1: Generate initial portfolio with selected provider
+                const response = await fetch('/api/generate-portfolio', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ...userData,
+                        designPrompt,
+                        provider: selectedProvider
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Update UI if fallback happened
+                    if (result.fallbackInfo) {
+                        showNotification(result.fallbackInfo, 'info');
+                    }
+
+                    // Step 2: Enhance the code with Gemini
+                    const enhanceResponse = await fetch('/api/enhance-portfolio', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            html: result.html,
+                            designPrompt: designPrompt
+                        })
+                    });
+
+                    const enhanceResult = await enhanceResponse.json();
+
+                    if (enhanceResult.success) {
+                        localStorage.setItem('lastGeneratedCode', enhanceResult.html);
+                    } else {
+                        localStorage.setItem('lastGeneratedCode', result.html);
+                    }
+                    window.location.href = 'editor.html';
+                } else {
+                    showNotification('حدث خطأ: ' + result.error, 'error');
+                    document.getElementById('loading').classList.remove('show');
+                }
+            } catch (error) {
+                showNotification('حدث خطأ في الاتصال: ' + error.message, 'error');
+                document.getElementById('loading').classList.remove('show');
+            }
+        }
+
+        function copyCode() {
+            const code = document.getElementById('codeResult').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                showNotification('تم نسخ الكود بنجاح!', 'success');
+            });
+        }
+
+        function downloadCode() {
+            const code = document.getElementById('codeResult').textContent;
+            const blob = new Blob([code], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'portfolio.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        async function publishOnline() {
+            const htmlCode = document.getElementById('codeResult').textContent;
+            if (!htmlCode) {
+                showNotification('يرجى إنشاء الموقع أولاً', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('publishBtn');
+            const originalContent = btn.innerHTML;
+
+            // Check session before animation
+            const sessionStr = localStorage.getItem('session');
+            const userStr = localStorage.getItem('user');
+
+            if (!sessionStr || sessionStr === 'null' || !userStr || userStr === 'null') {
+                showNotification('يرجى تسجيل الدخول أولاً لنشر موقعك', 'error');
+                setTimeout(() => window.location.href = 'login.html', 1500);
+                return;
+            }
+
+            let session, user;
+            try {
+                session = JSON.parse(sessionStr);
+                user = JSON.parse(userStr);
+            } catch (e) {
+                showNotification('خطأ في بيانات الجلسة، يرجى إعادة تسجيل الدخول', 'error');
+                return;
+            }
+
+            if (!session || !session.access_token) {
+                showNotification('انتهت صلاحية الجلسة، يرجى تسجيل الدخول مجدداً', 'error');
+                return;
+            }
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>جاري النشر...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/api/publish', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${session.access_token}`
+                    },
+                    body: JSON.stringify({ html: htmlCode, userId: user.id })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const liveUrl = window.location.origin + '/v/' + result.slug;
+                    showNotification('تم نشر موقعك بنجاح!', 'success');
+
+                    // Display link
+                    let linkContainer = document.getElementById('liveLinkResult');
+                    if (!linkContainer) {
+                        linkContainer = document.createElement('div');
+                        linkContainer.id = 'liveLinkResult';
+                        linkContainer.className = 'live-link-container';
+                        btn.parentElement.after(linkContainer);
+                    }
+
+                    linkContainer.innerHTML = `
+                        <div style="margin-bottom: 15px; color: #2ed573; font-weight: 700;">
+                            <i class="fas fa-check-circle me-2"></i> موقعك الآن مباشر على الإنترنت!
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center; justify-content: flex-end; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;">
+                            <code style="color: #ffffff; dir: ltr;">${liveUrl}</code>
+                            <button onclick="copyToClipboard('${liveUrl}')" class="btn-copy" style="padding: 5px 15px; font-size: 0.8rem;">
+                                <i class="fas fa-copy me-2"></i> نسخ الرابط
+                            </button>
+                            <a href="${liveUrl}" target="_blank" class="btn-publish" style="padding: 5px 15px; font-size: 0.8rem; text-decoration: none;">
+                                <i class="fas fa-external-link-alt me-2"></i> زيارة
+                            </a>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(result.error || 'فشل النشر');
+                }
+            } catch (error) {
+                console.error('Publish error:', error);
+                showNotification(error.message || 'حدث خطأ أثناء النشر، حاول مرة أخرى', 'error');
+            } finally {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('تم نسخ الرابط!', 'success');
+            });
+        }
+    </script>
+</body>
+
+</html>
