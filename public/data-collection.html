@@ -892,7 +892,11 @@
             }
         }
 
-        window.onload = fetchSpeechConfig;
+        window.onload = () => {
+            fetchSpeechConfig();
+            // Clear editing state when starting a new portfolio generation
+            localStorage.removeItem('currentEditingSlug');
+        };
 
         function showNotification(message, type = 'info') {
             const toast = document.createElement('div');

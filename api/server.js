@@ -31,12 +31,12 @@ app.get('/', (req, res) => {
 });
 
 // API Keys and Configuration from environment variables
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || "AIzaSyCxJ5-O-9jVQmWg3-8rx8GnqxTd8FtDqEk";
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || process.env.VITE_OPENROUTER_API_KEY || "sk-or-v1-your-actual-api-key-here";
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || process.env.VITE_OPENROUTER_API_KEY;
 const OPENROUTER_MODEL = process.env.VITE_OPENROUTER_MODEL || "google/gemini-2.0-flash-exp:free";
 
 // Azure OpenAI Configuration
-const AZURE_OPENAI_ENDPOINT = process.env.AZURE_OPENAI_ENDPOINT;
+const AZURE_OPENAI_ENDPOINT = process.env.AZURE_OPENAI_ENDPOINT || "https://portopiaai.openai.azure.com/";
 const AZURE_OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY;
 const AZURE_OPENAI_DEPLOYMENT = process.env.AZURE_OPENAI_DEPLOYMENT || "gpt-4";
 
@@ -170,7 +170,7 @@ app.get("/api/ai-status", (req, res) => {
 app.get("/api/config", (req, res) => {
   res.json({
     azureSpeechKey: process.env.VITE_AZURE_SPEECH_KEY,
-    azureSpeechRegion: process.env.VITE_AZURE_SPEECH_REGION
+    azureSpeechRegion: process.env.VITE_AZURE_SPEECH_REGION || "uaenorth"
   });
 });
 

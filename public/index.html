@@ -408,9 +408,10 @@
                 your SAAS game today!
             </p>
             <div>
-                <button class="btn-primary-large">
-                    <i href=data-collection.html classs="fas fa-globe"></i>
-                    <a href=data-collection.html>Generate My Portfolio</a>
+                <button class="btn-primary-large"
+                    onclick="localStorage.removeItem('currentEditingSlug'); window.location.href='data-collection.html'">
+                    <i class="fas fa-globe"></i>
+                    <span>Generate My Portfolio</span>
                     <i class="fas fa-arrow-right"></i>
                 </button>
                 <button class="btn-secondary-large">Learn More</button>
@@ -583,7 +584,7 @@
             if (session) {
                 navActions.innerHTML = `
                     <a href="dashboard.html" class="btn btn-outline-light btn-sm px-4">Dashboard</a>
-                    <a href="data-collection.html" class="btn btn-get-started">Create New</a>
+                    <a href="data-collection.html" onclick="localStorage.removeItem('currentEditingSlug')" class="btn btn-get-started">Create New</a>
                 `;
             }
         });

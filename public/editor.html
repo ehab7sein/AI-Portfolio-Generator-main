@@ -33,6 +33,7 @@
             --text: #f8fafc;
             --text-muted: #94a3b8;
             --border: rgba(255, 255, 255, 0.1);
+            --accent: #10b981;
         }
 
         * {
@@ -154,17 +155,19 @@
             flex: 1;
             display: flex;
             overflow: hidden;
+            position: relative;
         }
 
         /* Sidebar Chat */
         .sidebar {
             width: 350px;
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(20px);
             border-left: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             flex-direction: column;
-            z-index: 10;
+            z-index: 50;
+            transition: transform 0.3s ease;
         }
 
         .chat-header {
@@ -174,6 +177,7 @@
             font-weight: 600;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 12px;
             color: var(--accent);
             font-size: 1.1rem;
@@ -415,6 +419,67 @@
             line-height: 1.5;
         }
 
+        /* Mobile Adjustments */
+        #mobileMenuBtn {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 0 10px;
+            }
+
+            .logo span {
+                display: none;
+            }
+
+            .header-actions {
+                gap: 8px;
+            }
+
+            .btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .toggle-btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 60px;
+                bottom: 0;
+                right: 0;
+                width: 100%;
+                transform: translateX(100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            #mobileMenuBtn {
+                display: flex;
+                background: var(--primary);
+                color: white;
+                border-radius: 8px;
+                width: 36px;
+                height: 36px;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .preview-header span {
+                display: none;
+            }
+
+            .device-toggle {
+                display: none;
+            }
+        }
+
         /* Notifications */
         #notification {
             position: fixed;
@@ -501,26 +566,34 @@
             <div class="view-toggle">
                 <button class="toggle-btn active" id="previewBtn" onclick="switchView('preview')">
                     <i class="fas fa-eye"></i>
-                    Preview
+                    <span class="hidden md:inline">Preview</span>
                 </button>
                 <button class="toggle-btn" id="codeBtn" onclick="switchView('code')">
                     <i class="fas fa-code"></i>
-                    Code
+                    <span class="hidden md:inline">Code</span>
                 </button>
             </div>
+            <button id="mobileMenuBtn" onclick="toggleSidebar()">
+                <i class="fas fa-comment-dots"></i>
+            </button>
             <button class="btn btn-primary" onclick="publishFinal()">
                 <i class="fas fa-paper-plane"></i>
-                Publish Website
+                <span class="hidden sm:inline">Publish</span>
             </button>
         </div>
     </header>
 
     <main>
         <!-- Sidebar Chat -->
-        <section class="sidebar">
+        <section class="sidebar" id="sidebar">
             <div class="chat-header">
-                <i class="fas fa-magic"></i>
-                AI Editing Assistant (Gemini)
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-magic"></i>
+                    AI Editing Assistant
+                </div>
+                <button class="md:hidden text-white/50 hover:text-white" onclick="toggleSidebar()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="chat-messages" id="chatMessages">
                 <div class="message ai">
@@ -698,6 +771,11 @@
             updateLineNumbers();
             updateCursorPosition();
             localStorage.setItem('lastGeneratedCode', currentHtml);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
         }
 
         function switchView(view) {
