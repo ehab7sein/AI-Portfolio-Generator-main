@@ -1138,10 +1138,12 @@ app.use((req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-// Only listen if this is the main module (not on Vercel)
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+
+// IMPORTANT: Do NOT call app.listen() on Vercel
+// This is what causes the build to hang
+if (!process.env.VERCEL && process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`🚀 Local Server running on http://localhost:${PORT}`);
   });
 }
 
