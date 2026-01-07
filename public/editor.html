@@ -939,6 +939,9 @@
                 }
             }
 
+            // Close sidebar if open on mobile
+            document.getElementById('sidebar').classList.remove('show');
+
             document.getElementById('loadingOverlay').style.display = 'flex';
             document.getElementById('loadingText').textContent = editingSlug ? 'جاري تحديث موقعك...' : 'جاري نشر موقعك أونلاين...';
 
