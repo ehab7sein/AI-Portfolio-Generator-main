@@ -25,9 +25,9 @@ app.use((req, res, next) => {
 // API Routes go here (we will move them later in this tool call)
 
 
-// Redirect root to landing page
+// Redirect root to index page
 app.get('/', (req, res) => {
-  res.redirect('/landing.html');
+  res.redirect('/index.html');
 });
 
 // API Keys and Configuration from environment variables
