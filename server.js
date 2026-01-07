@@ -3,6 +3,11 @@ import { GoogleGenAI } from "@google/genai";
 import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load environment variables
 dotenv.config();
@@ -1121,8 +1126,10 @@ app.get("/v/:slug", async (req, res) => {
 });
 
 
-// Static Files middleware at the end
-app.use(express.static('public'));
+// Static Files middleware
+// Use path.join with process.cwd() to ensure it works on Vercel
+const publicPath = path.join(process.cwd(), 'public');
+app.use(express.static(publicPath));
 
 // Catch-all for 404s
 app.use((req, res) => {
@@ -1131,8 +1138,13 @@ app.use((req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+// Only listen if this is the main module (not on Vercel)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;
 
 
